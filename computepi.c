@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <immintrin.h>
 #include <omp.h>
+#include <time.h>
 #include "computepi.h"
 
 double compute_pi_baseline(size_t N)
@@ -116,4 +117,18 @@ double compute_pi_avx_unroll(size_t N)
           tmp3[0] + tmp3[1] + tmp3[2] + tmp3[3] +
           tmp4[0] + tmp4[1] + tmp4[2] + tmp4[3];
     return pi * 4.0;
+}
+
+double compute_pi_MonteCarlo(size_t N)
+{
+    int sum = 0;
+    srand((unsigned)time(NULL));
+    for(size_t i = 0; i < N; i++) {
+        double x = (double)rand() / (double)RAND_MAX;
+        double y = (double)rand() / (double)RAND_MAX;
+
+        if((x * x + y * y) <= 1)
+            sum++;
+    }
+    return 4.0 * sum / N;
 }
